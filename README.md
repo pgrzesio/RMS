@@ -1,2 +1,0 @@
-# RMS
-Tests for RMS
