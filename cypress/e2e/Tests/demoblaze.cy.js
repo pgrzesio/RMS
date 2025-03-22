@@ -10,6 +10,7 @@ beforeEach(() => {
 });
 
 describe('Demoblaze Tests', () => {
+    cy.log('Loging Test');
     const userName = 'testuser_' + Date.now();
     const password = 'TestPassword123';
     const products = [
