@@ -27,7 +27,6 @@ describe('Demoblaze Tests', () => {
     }
 
     let totalAmount = 0;
-
     it('Konto anlegen, anmelden und zwei Produkte kaufen', () => {
 
         // Benutzer anlegen
