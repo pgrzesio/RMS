@@ -9,17 +9,12 @@ jobs:
   cypress-run:
     runs-on: ubuntu-latest
 
+    container:
+      image: cypress/included:12.12.0  # Wersja Cypress, dostosuj do swojej
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
-
-      - name: Install Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: 18
-
-      - name: Install dependencies
-        run: npm install
 
       - name: Run Cypress tests
         run: npx cypress run
