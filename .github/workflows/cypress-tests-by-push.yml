@@ -1,0 +1,30 @@
+name: Cypress Tests
+
+on:
+  push:  # Akcja uruchamia się na każdym pushu do dowolnego brancha
+  pull_request:  # Działa również dla pull requestów
+
+jobs:
+  cypress-run:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Install Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Ensure Cypress is installed correctly
+        run: npx cypress install
+
+      - name: Fix Cypress permissions
+        run: chmod +x node_modules/.bin/cypress
+
+      - name: Run Cypress tests
+        run: npx cypress run
