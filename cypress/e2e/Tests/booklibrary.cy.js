@@ -13,71 +13,93 @@ describe('Tests von API', () => {
           expect(response.body).to.be.an('array');
           expect(response.body.length).to.be.greaterThan(0);
         });
-      });
+    });
 
-      it('Eine Bestellung abgeben', () => {
-        const newOrder = {
-                "bookId": 1,
-                "customerName": "Gregor"
-        };
+    it('Eine Bestellung abgeben', () => {
+      const newOrder = {
+        "bookId": 1,
+        "customerName": "Gregor"
+      };
     
-        cy.request({
-          method: 'POST',
-          url: `${url}orders`,
-          body: newOrder,
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization' : bearerToken 
-          }
+      cy.request({
+        method: 'POST',
+        url: `${url}orders`,
+        body: newOrder,
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization' : bearerToken 
+        }
         }).should((response) => {
           expect(response.status).to.eq(201);
           expect(response.body).to.have.property('created');
           expect(response.body).to.have.property('orderId');
-        });
       });
+    });
 
-      it('Alle Bestellungen abfragen', () => {
+    it('Alle Bestellungen abfragen', () => {
+      cy.request({
+        method: 'GET',
+        url: `${url}orders`,
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization' : bearerToken 
+        }
+      }).then((response) => {
+          expect(response.status).to.eq(200);
+          orderIds = response.body.map(order => order.id);
+          expect(orderIds.length).to.be.greaterThan(0);
+      });
+    });
+
+    it('Alle Bestellungen ändern', () => {
+      orderIds.forEach((orderId) => {
+        cy.request({
+          method: 'PATCH',
+          url: `${url}orders/${orderId}`,
+          headers: {
+            'Authorization': bearerToken
+          },
+          body: {
+            "customerName": "Gregor CHANGED"
+          },
+        })
         cy.request({
           method: 'GET',
-          url: `${url}orders`,
+          url: `${url}orders/${orderId}`,
           headers: {
-            'Content-Type': 'application/json',
-            'Authorization' : bearerToken 
+            'Authorization': bearerToken
           }
         }).then((response) => {
-            expect(response.status).to.eq(200);
-    
-            orderIds = response.body.map(order => order.id);
-            
-            expect(orderIds.length).to.be.greaterThan(0);
+          expect(response.status).to.eq(200);
+          expect(response.body).to.have.property('customerName', 'Gregor CHANGED');
         });
-      });
-
-      it('Alle Bestellungen löschen', () => {
-        orderIds.forEach((orderId) => {
-          cy.request({
-            method: 'DELETE',
-            url: `${url}orders/${orderId}`,
-            headers: {
-              'Authorization': bearerToken
-            }
-          }).then((response) => {
-            expect(response.status).to.eq(204);
-          });
-        });
-      });
-
-      it('Eine nicht vorhandene Bestellung löschen', () => {
-        orderIds.forEach((orderId) => {
-          cy.request({
-            method: 'DELETE',
-            url: `${url}orders/XYZ`,
-            headers: {
-              'Authorization': bearerToken
-            }
-          }).then((response) => {
-            expect(response.status).to.eq(204);
-          });
-        });
-      });
+    });
   });
+    it('Alle Bestellungen löschen', () => {
+      orderIds.forEach((orderId) => {
+        cy.request({
+          method: 'DELETE',
+          url: `${url}orders/${orderId}`,
+          headers: {
+            'Authorization': bearerToken
+          }
+        }).then((response) => {
+          expect(response.status).to.eq(204);
+        });
+      });
+    });
+
+    it('Eine nicht vorhandene Bestellung löschen', () => {
+      orderIds.forEach((orderId) => {
+        cy.request({
+          method: 'DELETE',
+          url: `${url}orders/XYZ`,
+          headers: {
+            'Authorization': bearerToken
+          }
+        }).then((response) => {
+          expect(response.status).to.eq(204);
+        });
+      });
+    });
+});
