@@ -5,9 +5,12 @@ export const mainSelectors = {
     login: 'button[onclick="logIn()"]',
     currentUser: '#nameofuser',
     categoriesList: '.list-group',
+    category: '.list-group-item',
     navigationLink: '.nav-item',
     browserAlert: '.sweet-alert',
     browserAlertOK: '.confirm',
     modal: '#exampleModal',
-    windowsAlert: 'window:alert'
+    windowsAlert: 'window:alert',
+    prevoiusButton: '#prev2',
+    nextButton: '#next2'
 };

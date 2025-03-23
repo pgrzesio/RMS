@@ -10,6 +10,7 @@ export function createAccount(username, password) {
     cy.wait(500);
 
     // Formular ausfühlen
+    
     cy.get(createAccountSelectors.userName).type(username);
     cy.get(createAccountSelectors.userPassword).type(password);
     cy.get(createAccountSelectors.register).click();
