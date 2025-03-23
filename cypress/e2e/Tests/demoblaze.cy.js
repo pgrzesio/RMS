@@ -17,6 +17,11 @@ describe('Demoblaze Tests', () => {
         { category: 'Laptops', name: 'MacBook air', price: 700 },
         { category: 'Phones', name: 'Iphone 6 32gb', price: 790 }
     ];
+    const categories = [
+        { name: 'Phones', amount: 7 },
+        { name: 'Laptops', amount: 6 },
+        { name: 'Monitors', amount: 2 }
+    ]
     const creditCard = {
         name: 'Test User',
         country: 'Testland',
@@ -79,7 +84,7 @@ describe('Demoblaze Tests', () => {
         // Formular ausfüllen
         cy.get(contactFormSelectors.email).type('test@example.com');
         cy.get(contactFormSelectors.name).type('Test User');
-        cy.get(contactFormSelectors.message).type('To jest testowa wiadomość.');
+        cy.get(contactFormSelectors.message).type('Das iste eine Testnachricht');
 
         // Verschicken
         cy.get(contactFormSelectors.sendButton).click();
@@ -87,6 +92,32 @@ describe('Demoblaze Tests', () => {
         // Alert überprüfen
         cy.on(mainSelectors.windowsAlert, (text) => {
             expect(text).to.contain('Thanks for the message');
+        });
+    });
+
+    it('Die Buttons "Previous" und -"Next" sind nur gezeigt, wenn es nötig ist', () => {
+        //Prüfen, ob der "Prevoious" Button auf der erste Seite nicht sichtbar ist.
+        cy.get(mainSelectors.prevoiusButton).should('not.be.visible');
+    
+        //Prüfen, ob der "Next" Button auf der erste Seite sichtbar ist.
+        cy.get(mainSelectors.nextButton).should('be.visible');
+    
+        //Prüfen, ob der "Prevoious" Button auf der zweite Seite sichtbar ist.
+        cy.get(mainSelectors.nextButton).click();
+        cy.wait(1000);
+        cy.get(mainSelectors.prevoiusButton).should('be.visible');
+    });
+
+    it('Der Button "Next" in ausgewählte Produktkategorie, nur da mehr als 9 Produkte gibt', () => {
+        categories.forEach((category) => {
+            // Produktkategorie auswählen
+            cy.contains(mainSelectors.category, category.name).click();
+            cy.wait(1000);
+            if (category.amount > 9) {
+                cy.get(mainSelectors.nextButton).should('be.visible'); // Der Button "Next" soll sichtbar sein
+              } else {
+                cy.get(mainSelectors.nextButton).should('not.be.visible'); // Der Button "Next" soll nicht sichtbar sein
+              }
         });
     });
 });
