@@ -95,29 +95,29 @@ describe('Demoblaze Tests', () => {
         });
     });
 
-    it('Die Buttons "Previous" und -"Next" sind nur gezeigt, wenn es nötig ist', () => {
+    it('FAILURE- Die Buttons "Previous" und -"Next" sind nur gezeigt, wenn es nötig ist', () => {
         //Prüfen, ob der "Prevoious" Button auf der erste Seite nicht sichtbar ist.
         cy.get(mainSelectors.prevoiusButton).should('not.be.visible');
-    
+
         //Prüfen, ob der "Next" Button auf der erste Seite sichtbar ist.
         cy.get(mainSelectors.nextButton).should('be.visible');
-    
+
         //Prüfen, ob der "Prevoious" Button auf der zweite Seite sichtbar ist.
         cy.get(mainSelectors.nextButton).click();
         cy.wait(1000);
         cy.get(mainSelectors.prevoiusButton).should('be.visible');
     });
 
-    it('Der Button "Next" in ausgewählte Produktkategorie, nur da mehr als 9 Produkte gibt', () => {
+    it('FAILURE- Der Button "Next" in ausgewählte Produktkategorie, nur da mehr als 9 Produkte gibt', () => {
         categories.forEach((category) => {
             // Produktkategorie auswählen
             cy.contains(mainSelectors.category, category.name).click();
             cy.wait(1000);
             if (category.amount > 9) {
                 cy.get(mainSelectors.nextButton).should('be.visible'); // Der Button "Next" soll sichtbar sein
-              } else {
+            } else {
                 cy.get(mainSelectors.nextButton).should('not.be.visible'); // Der Button "Next" soll nicht sichtbar sein
-              }
+            }
         });
     });
 });
