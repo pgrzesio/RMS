@@ -1,9 +1,8 @@
 /// <reference types="cypress" />
 import { cartViewSelectors } from "../PageObjects/cartViewSelectors";
-import { contactFormSelectors } from "../PageObjects/contactFormSelectors";
 import { mainSelectors } from "../PageObjects/mainSelectors";
 import { productViewSelectors } from "../PageObjects/productViewSelectors";
-import { createAccount, login, purchase } from "../utils/utils";
+import { createAccount, login, purchase, sendMessage } from "../utils/utils";
 
 beforeEach(() => {
     cy.visit('https://www.demoblaze.com/index.html');
@@ -29,6 +28,11 @@ describe('Demoblaze Tests', () => {
         cardNummber: '9876 5432 1098 7654 3210',
         cardExpirationMonth: '03',
         ccardExpirationYear: '2029'
+    }
+    const messageDetails = {
+        email: 'test@example.com',
+        name: 'Test User',
+        message: 'Das ist eine Testnachricht'
     }
 
     let totalAmount = 0;
@@ -76,23 +80,8 @@ describe('Demoblaze Tests', () => {
     });
 
     it('Nachricht an Store senden', () => {
-
-        // "Send Message Pop-up öffnen"
-        cy.get(mainSelectors.navigationLink).contains('Contact').click();
-        cy.get(mainSelectors.modal).should('be.visible');
-
-        // Formular ausfüllen
-        cy.get(contactFormSelectors.email).type('test@example.com');
-        cy.get(contactFormSelectors.name).type('Test User');
-        cy.get(contactFormSelectors.message).type('Das iste eine Testnachricht');
-
-        // Verschicken
-        cy.get(contactFormSelectors.sendButton).click();
-
-        // Alert überprüfen
-        cy.on(mainSelectors.windowsAlert, (text) => {
-            expect(text).to.contain('Thanks for the message');
-        });
+        // Eine Nachricht verschicken
+        sendMessage(messageDetails);
     });
 
     it('FAILURE- Die Buttons "Previous" und -"Next" sind nur gezeigt, wenn es nötig ist', () => {
