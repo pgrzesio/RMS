@@ -16,3 +16,13 @@ jobs:
 
       - name: Run Cypress tests
         run: npx cypress run --spec "cypress/e2e/Tests/demoblaze.cy.js"
+
+      - name: Upload Cypress artifacts on failure
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: cypress-artifacts
+          path: |
+            cypress/screenshots
+            cypress/videos
+          retention-days: 3
